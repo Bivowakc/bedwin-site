@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nuclear Winter Explorer v3</title>
+  <style>
+    :root {
+      --brand-primary: #40C4D3;
+      --brand-text: #E5EEF7;
+      --brand-text-subtle: #8FA3B8;
+      --brand-bg: #08111D;
+      --brand-page-bg: #060D17;
+      --font-heading: Satoshi, Inter, sans-serif;
+      --font-body: Inter, sans-serif;
+      --panel: #0C1726;
+      --panel-2: #0F1D30;
+      --border: #1D3047;
+      --danger: #EF4444;
+      --warn: #F59E0B;
+      --ok: #22C55E;
+      --track-a: #14B8A6;
+      --track-b: #F97316;
+      --pin: #94A3B8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, rgba(64,196,211,0.08), transparent 30%), var(--brand-page-bg);
+      color: var(--brand-text);
+      font-family: var(--font-body);
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    .hero {
+      border-bottom: 1px solid var(--border);
+      background:
+        linear-gradient(rgba(64,196,211,0.03), rgba(64,196,211,0.00)),
+        repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(64,196,211,0.03) 24px, rgba(64,196,211,0.03) 25px),
+        repeating-linear-gradient(90deg, transparent, transparent 24px, rgba(64,196,211,0.03) 24px, rgba(64,196,211,0.03) 25px),
+        var(--brand-bg);
+    }
+    h1,h2,h3 { font-family: var(--font-heading); margin: 0; }
+    h1 { font-size: clamp(30px, 5vw, 54px); line-height: 1; letter-spacing: -0.03em; }
+    h2 { font-size: 18px; margin-bottom: 10px; }
+    p { color: var(--brand-text-subtle); line-height: 1.6; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .grid { display: grid; gap: 16px; }
+    .grid-2 { grid-template-columns: 1.2fr 0.8fr; }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .panel {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    }
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--brand-text-subtle);
+      font-size: 12px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    .controls label { display: block; font-size: 13px; color: var(--brand-text-subtle); margin-bottom: 6px; }
+    .controls input[type="range"], .controls select {
+      width: 100%;
+      margin-bottom: 14px;
+    }
+    .controls select {
+      background: #0A1422;
+      color: var(--brand-text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .small { font-size: 12px; color: var(--brand-text-subtle); }
+    .metric { padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: rgba(255,255,255,0.01); }
+    .metric .k { font-size: 12px; color: var(--brand-text-subtle); text-transform: uppercase; letter-spacing: 0.08em; }
+    .metric .v { font-size: 28px; font-family: var(--font-heading); margin-top: 6px; }
+    .note { border-left: 3px solid var(--brand-primary); padding-left: 12px; }
+    .warn { border-left-color: var(--warn); }
+    .danger { border-left-color: var(--danger); }
+    svg { width: 100%; height: auto; display: block; }
+    .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--brand-text-subtle); margin-top: 8px; }
+    .legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 6px; border-radius: 3px; vertical-align: -2px; }
+    .a::before { background: var(--track-a); }
+    .b::before { background: var(--track-b); }
+    .p::before { background: var(--pin); }
+    .table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .table th, .table td { border-bottom: 1px solid var(--border); padding: 10px 6px; text-align: left; vertical-align: top; }
+    .table th { color: var(--brand-text-subtle); font-weight: 600; }
+    .ok { color: var(--ok); }
+    .amber { color: var(--warn); }
+    .red { color: var(--danger); }
+    @media (max-width: 900px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="wrap">
+      <div class="pill mono">v3 · plain HTML/SVG/JS · no CDN dependencies</div>
+      <div class="pill mono">Tier 1 + Tier 2 only</div>
+      <div class="pill mono">assumption-auditable</div>
+      <h1>Nuclear Winter Explorer</h1>
+      <p>A reduced-form exploratory model for <b>Tier 1 physical effects</b> and <b>Tier 2 food-system impacts</b>. This version removes Tier 3 recovery and turns several major uncertainties into explicit user-controlled parameters.</p>
+    </div>
+  </div>
+
+  <div class="wrap grid grid-2">
+    <div class="grid">
+      <div class="panel">
+        <h2>Temperature response</h2>
+        <div id="tempChart"></div>
+        <div class="legend">
+          <span class="a">Track A / upper branch</span>
+          <span class="b">Track B / lower branch</span>
+          <span class="p">Pinatubo reference</span>
+        </div>
+        <p class="small">This chart is a stylised global-mean response curve, not a GCM. It shows how assumptions propagate, not what “will happen”.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Tier 2 food-system effects</h2>
+        <div id="foodBars"></div>
+        <p class="small">Food impacts are shown as <b>production-side stress indicators</b>, not direct predictions of access, trade, or mortality. Mortality outputs have been removed in this version because they created false precision downstream of poorly modelled institutional effects.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Assumption audit</h2>
+        <table class="table">
+          <thead>
+            <tr><th>Stage</th><th>Assumption</th><th>Status</th><th>Comment</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Scenario setup</td><td>Regional case approximated as India–Pakistan scale</td><td class="ok">Reasonable</td><td>Useful benchmark, but target mix / season / burst height omitted.</td></tr>
+            <tr><td>Soot injection</td><td>Track A and B shown as two branch points</td><td class="amber">Heuristic</td><td>Real uncertainty is probably a distribution, not two bins.</td></tr>
+            <tr><td>Lofting</td><td>Lofting treated as controllable efficiency parameter</td><td class="amber">Exploratory</td><td>Better than binary yes/no, still a simplification of plume physics.</td></tr>
+            <tr><td>Climate response</td><td>EBM used for global-mean cooling</td><td class="ok">Defensible</td><td>Good reduced-form proxy, but compresses regional and seasonal structure.</td></tr>
+            <tr><td>Uncertainty</td><td>Ranges expressed through user parameters</td><td class="ok">Honest</td><td>Still not structural model uncertainty.</td></tr>
+            <tr><td>Food effects</td><td>Food sensitivity multiplier maps climate shock to production stress</td><td class="amber">Stylised</td><td>Useful for exploration; should not be confused with validated crop-model output.</td></tr>
+            <tr><td>Recovery / mortality</td><td>Removed</td><td class="ok">Improvement</td><td>These were least defensible and most likely to overclaim.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid controls">
+      <div class="panel">
+        <h2>Scenario & parameters</h2>
+        <label for="scenario">Scenario preset</label>
+        <select id="scenario">
+          <option value="regional">Regional / India–Pakistan-style</option>
+          <option value="intermediate">Intermediate / ~27 Tg class</option>
+          <option value="large">Large exchange / ~150 Tg class</option>
+        </select>
+
+        <label for="bc">Effective black carbon injection (Tg): <span id="bcVal" class="mono"></span></label>
+        <input id="bc" type="range" min="1" max="150" step="0.5" />
+
+        <label for="loft">Lofting efficiency: <span id="loftVal" class="mono"></span></label>
+        <input id="loft" type="range" min="0" max="1" step="0.01" />
+
+        <label for="life">Aerosol lifetime (years): <span id="lifeVal" class="mono"></span></label>
+        <input id="life" type="range" min="0.5" max="15" step="0.1" />
+
+        <label for="nh">Northern Hemisphere targeting bias: <span id="nhVal" class="mono"></span></label>
+        <input id="nh" type="range" min="0" max="1" step="0.01" />
+
+        <label for="food">Food-system sensitivity multiplier: <span id="foodVal" class="mono"></span></label>
+        <input id="food" type="range" min="0.5" max="2.0" step="0.05" />
+
+        <p class="small note warn">The big epistemic move in v3 is: instead of hiding uncertainty in prose, some of it becomes tunable. That makes the model less “authoritative-looking” but more honest.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Current interpretation</h2>
+        <div class="grid grid-3">
+          <div class="metric"><div class="k">Effective forcing class</div><div id="mClass" class="v">—</div></div>
+          <div class="metric"><div class="k">Peak cooling</div><div id="mPeak" class="v">—</div></div>
+          <div class="metric"><div class="k">Tier 2 stress</div><div id="mFood" class="v">—</div></div>
+        </div>
+        <p id="summary" class="note" style="margin-top:14px"></p>
+      </div>
+
+      <div class="panel">
+        <h2>What's worth flagging as implausible?</h2>
+        <ul style="margin:0; padding-left:18px; color:var(--brand-text-subtle); line-height:1.7; font-size:14px;">
+          <li>If <b>lofting efficiency</b> is low but <b>lifetime</b> is very high, you're probably creating an internally inconsistent branch.</li>
+          <li>If <b>food sensitivity</b> is high, remember that this stands in for crop, trade, storage, substitution, and adaptation all at once — it is not a crop model.</li>
+          <li>Very specific-looking outputs from the <b>intermediate</b> scenario remain less defensible than anchor cases.</li>
+          <li>This model still says more about <b>conditional pathways</b> than about forecasts.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const presets = {
+      regional: { bc: 5, loft: 0.8, life: 5.0, nh: 0.8, food: 1.0 },
+      intermediate: { bc: 27, loft: 0.85, life: 8.0, nh: 0.8, food: 1.2 },
+      large: { bc: 150, loft: 0.9, life: 12.0, nh: 0.8, food: 1.4 }
+    };
+
+    const el = id => document.getElementById(id);
+    const scenario = el('scenario');
+    const bc = el('bc');
+    const loft = el('loft');
+    const life = el('life');
+    const nh = el('nh');
+    const food = el('food');
+
+    function applyPreset(name) {
+      const p = presets[name];
+      bc.value = p.bc;
+      loft.value = p.loft;
+      life.value = p.life;
+      nh.value = p.nh;
+      food.value = p.food;
+      render();
+    }
+
+    function peakCooling(bcTg, loftEff) {
+      // Reduced-form mapping, explicitly heuristic.
+      // Anchors loosely around 5 Tg ≈ 1.8C and 150 Tg ≈ 8C, modulated by lofting.
+      const effective = bcTg * (0.35 + 0.65 * loftEff);
+      const cool = 0.55 * Math.pow(effective, 0.45);
+      return Math.min(10, cool);
+    }
+
+    function classify(bcTg, peak) {
+      if (bcTg < 3 || peak < 0.8) return 'Sub-systemic';
+      if (bcTg < 15 || peak < 2.5) return 'Severe regional';
+      if (bcTg < 60 || peak < 5) return 'Systemic';
+      return 'Civilisation-scale';
+    }
+
+    function tempCurve(peak, lifetime, peakYear=3, years=20) {
+      const pts = [];
+      const tau = lifetime / Math.log(2);
+      for (let i = 0; i <= years * 2; i++) {
+        const t = i / 2;
+        let y;
+        if (t <= peakYear) y = -peak * (t / peakYear);
+        else y = -peak * Math.exp(-(t - peakYear) / tau);
+        pts.push({ t, y });
+      }
+      return pts;
+    }
+
+    function foodStress(peak, foodMult, nhBias) {
+      const nhBread = Math.min(95, Math.max(0, peak * 14 * foodMult * (0.8 + 0.4 * nhBias)));
+      const global = Math.min(85, Math.max(0, peak * 7 * foodMult));
+      const tropics = Math.min(70, Math.max(0, peak * 4.5 * foodMult));
+      const sh = Math.min(60, Math.max(0, peak * 3.5 * foodMult * (1.1 - 0.5 * nhBias)));
+      return { nhBread, global, tropics, sh };
+    }
+
+    function svgLineChart(curves, opts={}) {
+      const w = 720, h = 280, m = {t:10,r:20,b:28,l:44};
+      const iw = w - m.l - m.r, ih = h - m.t - m.b;
+      const xMin = 0, xMax = 20, yMin = -10, yMax = 1;
+      const sx = x => m.l + (x - xMin) / (xMax - xMin) * iw;
+      const sy = y => m.t + (yMax - y) / (yMax - yMin) * ih;
+      let out = `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">`;
+      for (let gx=0; gx<=20; gx+=5) out += `<line x1="${sx(gx)}" y1="${m.t}" x2="${sx(gx)}" y2="${h-m.b}" stroke="#1D3047" stroke-dasharray="3 3"/>`;
+      for (let gy=-10; gy<=0; gy+=2) out += `<line x1="${m.l}" y1="${sy(gy)}" x2="${w-m.r}" y2="${sy(gy)}" stroke="#1D3047" stroke-dasharray="3 3"/>`;
+      out += `<line x1="${m.l}" y1="${sy(0)}" x2="${w-m.r}" y2="${sy(0)}" stroke="#31445A"/>`;
+      out += `<line x1="${m.l}" y1="${sy(-0.5)}" x2="${w-m.r}" y2="${sy(-0.5)}" stroke="#7C5A1C" stroke-dasharray="5 4"/>`;
+      out += `<text x="${w-m.r}" y="${sy(-0.5)-4}" fill="#7C5A1C" font-size="10" text-anchor="end">Tambora ~0.5°C</text>`;
+      for (let gx=0; gx<=20; gx+=5) out += `<text x="${sx(gx)}" y="${h-8}" fill="#8FA3B8" font-size="10" text-anchor="middle">${gx}</text>`;
+      for (let gy=-10; gy<=0; gy+=2) out += `<text x="${m.l-8}" y="${sy(gy)+4}" fill="#8FA3B8" font-size="10" text-anchor="end">${gy}</text>`;
+      curves.forEach(c => {
+        const path = c.points.map((p,i)=>`${i===0?'M':'L'} ${sx(p.t)} ${sy(p.y)}`).join(' ');
+        out += `<path d="${path}" fill="none" stroke="${c.color}" stroke-width="${c.width||2.5}" ${c.dash?`stroke-dasharray="${c.dash}"`:''}/>`;
+      });
+      out += `</svg>`;
+      return out;
+    }
+
+    function svgBars(values) {
+      const rows = [
+        ['NH breadbaskets', values.nhBread, '#EF4444'],
+        ['Global mean', values.global, '#40C4D3'],
+        ['Tropics', values.tropics, '#F59E0B'],
+        ['SH mid-lat', values.sh, '#94A3B8']
+      ];
+      let out = '<svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg">';
+      rows.forEach((r, i) => {
+        const y = 20 + i * 48;
+        out += `<text x="0" y="${y+12}" fill="#8FA3B8" font-size="12">${r[0]}</text>`;
+        out += `<rect x="150" y="${y}" width="520" height="18" rx="8" fill="#142235" />`;
+        out += `<rect x="150" y="${y}" width="${520 * (r[1]/100)}" height="18" rx="8" fill="${r[2]}" />`;
+        out += `<text x="680" y="${y+13}" fill="#E5EEF7" font-size="12" text-anchor="end">${r[1].toFixed(0)}%</text>`;
+      });
+      out += '</svg>';
+      return out;
+    }
+
+    function render() {
+      el('bcVal').textContent = Number(bc.value).toFixed(1);
+      el('loftVal').textContent = Number(loft.value).toFixed(2);
+      el('lifeVal').textContent = Number(life.value).toFixed(1);
+      el('nhVal').textContent = Number(nh.value).toFixed(2);
+      el('foodVal').textContent = Number(food.value).toFixed(2);
+
+      const bcVal = Number(bc.value);
+      const loftVal = Number(loft.value);
+      const lifeVal = Number(life.value);
+      const nhVal = Number(nh.value);
+      const foodVal = Number(food.value);
+
+      const peakA = peakCooling(bcVal, loftVal);
+      const peakB = peakCooling(Math.max(1, bcVal * 0.4), Math.max(0, loftVal * 0.35));
+      const className = classify(bcVal, peakA);
+      const foods = foodStress(peakA, foodVal, nhVal);
+
+      el('mClass').textContent = className;
+      el('mPeak').textContent = peakA.toFixed(1) + '°C';
+      el('mFood').textContent = foods.global.toFixed(0) + '%';
+
+      el('summary').innerHTML = `
+        This parameter set implies a <b>${className}</b> forcing class. Under the current assumptions, the upper branch reaches about <b>${peakA.toFixed(1)}°C</b> peak global-mean cooling, while the lower branch reaches about <b>${peakB.toFixed(1)}°C</b>. Tier 2 production-side food stress is shown as a <b>${foods.global.toFixed(0)}%</b> global mean shock, with stronger effects in NH breadbaskets. The most important caveat remains: this is a reduced-form exploration of conditional pathways, not a forecast.
+      `;
+
+      const pin = tempCurve(0.5, 1.5, 1.5, 20);
+      const a = tempCurve(peakA, lifeVal, 3, 20);
+      const b = tempCurve(peakB, Math.max(0.7, lifeVal * 0.45), 1.5, 20);
+      el('tempChart').innerHTML = svgLineChart([
+        { points: a, color: '#14B8A6' },
+        { points: b, color: '#F97316' },
+        { points: pin, color: '#94A3B8', dash: '6 5', width: 2 }
+      ]);
+
+      el('foodBars').innerHTML = svgBars(foods);
+    }
+
+    scenario.addEventListener('change', e => applyPreset(e.target.value));
+    [bc, loft, life, nh, food].forEach(x => x.addEventListener('input', render));
+    applyPreset('regional');
+  </script>
+</body>
+</html>
