@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thomas Bedwin — CV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDEEEA;
+    --paper-2:#E5E7E1;
+    --ink:#16202A;
+    --muted:#5B6670;
+    --rule:#CDD2CC;
+    --accent:#145C64;
+    --accent-soft:#dbe6e7;
+    --g1:#2E7D53;
+    --g2:#E0A21A;
+    --g3:#C7452E;
+    --g4:#6E2A63;
+    --maxw:940px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Newsreader",Georgia,serif;
+    font-size:18px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-soft);transition:border-color .15s}
+  a:hover{border-color:var(--accent)}
+  a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+  .eyebrow{
+    font-family:"Space Mono",monospace;
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  header{padding:78px 0 34px}
+  header .eyebrow{margin-bottom:20px}
+  h1{
+    font-family:"Space Grotesk",sans-serif;
+    font-weight:700;
+    font-size:clamp(2.6rem,7vw,4.4rem);
+    line-height:.98;
+    letter-spacing:-.02em;
+    margin:0 0 18px;
+  }
+  .tagline{
+    font-family:"Space Grotesk",sans-serif;
+    font-weight:500;
+    font-size:clamp(1.15rem,2.6vw,1.5rem);
+    line-height:1.25;
+    color:var(--ink);
+    max-width:34ch;
+    margin:0 0 30px;
+  }
+  .lead{max-width:62ch;color:#28323c;margin:0 0 40px}
+  .lead strong{font-weight:500}
+
+  .scale{margin:0 0 8px;max-width:560px}
+  .scale-bar{
+    height:12px;border-radius:6px;
+    background:linear-gradient(90deg,var(--g1) 0%,var(--g2) 42%,var(--g3) 72%,var(--g4) 100%);
+  }
+  .scale-ticks{
+    display:flex;justify-content:space-between;
+    font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.05em;
+    color:var(--muted);margin-top:8px;text-transform:uppercase;
+  }
+
+  section{padding:30px 0;border-top:1px solid var(--rule)}
+  .sec-head{
+    display:flex;align-items:baseline;gap:14px;margin-bottom:26px;
+  }
+  .sec-head .num{
+    font-family:"Space Mono",monospace;font-size:12px;color:var(--accent);
+    letter-spacing:.1em;
+  }
+  .sec-head h2{
+    font-family:"Space Grotesk",sans-serif;font-weight:600;
+    font-size:1.02rem;letter-spacing:.02em;margin:0;text-transform:uppercase;
+  }
+
+  .cards{display:grid;gap:18px}
+  @media(min-width:680px){.cards{grid-template-columns:1fr 1fr}}
+  .card{
+    background:var(--paper-2);
+    border:1px solid var(--rule);
+    border-radius:12px;
+    padding:22px 22px 20px;
+    display:flex;flex-direction:column;
+  }
+  .card h3{
+    font-family:"Space Grotesk",sans-serif;font-weight:600;
+    font-size:1.16rem;margin:0 0 6px;letter-spacing:-.01em;
+  }
+  .card .kicker{
+    font-family:"Space Mono",monospace;font-size:11px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;
+  }
+  .card p{font-size:16.5px;line-height:1.5;margin:0 0 16px;color:#28323c}
+  .card .go{margin-top:auto;font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:15px}
+  .card .go a{border-bottom-color:transparent}
+  .card .go a:hover{border-bottom-color:var(--accent)}
+
+  .entry{display:grid;grid-template-columns:120px 1fr;gap:8px 24px;padding:14px 0}
+  .entry + .entry{border-top:1px dashed var(--rule)}
+  .entry .when{font-family:"Space Mono",monospace;font-size:12.5px;color:var(--muted);padding-top:4px;letter-spacing:.01em}
+  .entry .what h3{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:1.08rem;margin:0 0 4px}
+  .entry .what .role{color:var(--muted);font-style:italic;font-size:16px}
+  .entry .what p{font-size:16px;margin:8px 0 0;color:#28323c;max-width:62ch}
+  @media(max-width:560px){.entry{grid-template-columns:1fr;gap:4px}}
+
+  .outlets{font-family:"Space Mono",monospace;font-size:13.5px;line-height:2;color:var(--ink);letter-spacing:.01em}
+  .writing-extra{margin-top:16px;color:#28323c;font-size:16.5px}
+  .writing-extra .lbl{color:var(--ink);font-weight:500}
+
+  .meta-grid{display:grid;gap:26px}
+  @media(min-width:680px){.meta-grid{grid-template-columns:1.4fr 1fr}}
+  .skills p{margin:0 0 10px;font-size:16.5px;color:#28323c}
+  .skills .label,.contact .label{font-family:"Space Mono",monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);display:block;margin-bottom:8px}
+  .contact .links{display:flex;flex-direction:column;gap:9px;font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:16px}
+  .contact .email{font-size:17px;margin-bottom:16px}
+
+  footer{padding:40px 0 64px;border-top:1px solid var(--rule);margin-top:8px}
+  footer .eyebrow{color:var(--muted)}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Curriculum vitae</div>
+    <h1>Thomas<br>Bedwin</h1>
+    <p class="tagline">Communicator, teacher, and catastrophe scientist.</p>
+    <p class="lead">I trained as a catastrophe scientist: tsunami hazard on Caribbean subduction zones, volcanic-eruption mortality across 18th-century Britain. Since then I have spent fifteen years making hard things legible, as a photojournalist published across Europe, an evidence-based advocate in animal welfare, and a teacher of English to everyone from medical students to airline pilots. Now I build small, working models that put those threads together, and I am moving the combination, <strong>hazard thinking plus plain communication</strong>, into work on global catastrophic risk, where the hardest tail events are the ones without a base rate.</p>
+
+    <div class="scale" aria-hidden="true">
+      <div class="scale-bar"></div>
+      <div class="scale-ticks"><span>background</span><span>local</span><span>severe</span><span>catastrophic</span></div>
+    </div>
+  </header>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="num">01</span><h2>Live work</h2></div>
+    <div class="cards">
+      <div class="card">
+        <div class="kicker">Built, deployed, debugged solo</div>
+        <h3>Air quality &amp; wildfire monitor</h3>
+        <p>A single-page map that fuses CAMS model output with community and official sensor networks, adds NASA wildfire hotspots and satellite smoke, and flags when the model and the real measurement disagree, and why. Serverless functions keep every API key off the client.</p>
+        <div class="go"><a href="#">View live &#8599;</a></div>
+      </div>
+      <div class="card">
+        <div class="kicker">Reduced-form model, assumption-audited</div>
+        <h3>Nuclear winter explorer</h3>
+        <p>An interactive, dependency-free model of how a nuclear or volcanic winter cools the planet and stresses food production. The major uncertainties, soot load, lofting, aerosol lifetime, food sensitivity, are exposed as sliders rather than buried in prose, and the model audits its own assumptions. It shows conditional pathways, not forecasts; I removed the earlier mortality estimates once they implied more precision than the science supports.</p>
+        <div class="go"><a href="#">View live &#8599;</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="num">02</span><h2>Effective altruism &amp; GCR</h2></div>
+    <div class="outlets">EAGxNordics 2026 · EAG New York, October 2026 (accepted) · UNIDIR, AI ethics &amp; governance, June 2026</div>
+    <p class="writing-extra">Ongoing self-directed study in AI safety and global catastrophic risk.</p>
+  </section>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="num">03</span><h2>Photojournalism</h2></div>
+    <div class="outlets">Published photography in: El País · BBC World · VICE · TAPAS Magazine · Emprendedores</div>
+    <p class="writing-extra">Documentary and editorial photography that translates complex or urgent stories into accessible visual narratives, to deadline, for a broad public.</p>
+    <p class="writing-extra"><span class="lbl">Recognition, exhibitions &amp; training.</span> IPA Honourable Mention. Group show "We not I" (VII Masterclass, 2020) and solo show "Las Caras del Real Jardín Botánico" (Madrid, 2023). Photojournalism training at Too Many Flash (2018) and the VII Agency Masterclass (Barcelona, 2019-2020).</p>
+  </section>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="num">04</span><h2>Experience</h2></div>
+
+    <div class="entry">
+      <div class="when">2020 - present</div>
+      <div class="what">
+        <h3>The Vegan Agency</h3>
+        <div class="role">Co-founder</div>
+        <p>PR and communications agency for plant-based and animal-welfare organisations across Spain and internationally. Produced and published original research, ran evidence-based advocacy campaigns, and built partnerships with animal rights organisations including IAWPC.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="when">2018 - present</div>
+      <div class="what">
+        <h3>Freelance photojournalist</h3>
+        <div class="role">Documentary &amp; editorial</div>
+        <p>Reportage and editorial photography for European and international press, working to deadline under pressure.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="when">2018 - 2019</div>
+      <div class="what">
+        <h3>20Minutos</h3>
+        <div class="role">Columnist</div>
+        <p>Twice-weekly written series bridging news and culture through the lens of British life in Spain, with high reader engagement.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="when">2010 - present</div>
+      <div class="what">
+        <h3>English language teacher</h3>
+        <div class="role">Corporate, medical, aviation</div>
+        <p>Curriculum design and needs analysis across varied specialist audiences, including a foundational English course for medical students at Hospital Universitario Puerta de Hierro and exam preparation for pilots.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="num">05</span><h2>Education</h2></div>
+
+    <div class="entry">
+      <div class="when">2008 - 2009</div>
+      <div class="what">
+        <h3>MSc Geophysical Hazards</h3>
+        <div class="role">University College London</div>
+        <p>Dissertation: tsunami hazard and risk from giant earthquakes on the Puerto Rico-Lesser Antilles subduction zone. Fieldwork in Antigua, Barbuda, and Anguilla. Applied risk analysis and expected-value reasoning under deep uncertainty.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="when">2005 - 2008</div>
+      <div class="what">
+        <h3>BSc (Hons) Environmental Earth Sciences</h3>
+        <div class="role">University of Wales, Aberystwyth</div>
+        <p>Dissertation: the effect of the Laki (1783) and Tambora (1815) eruptions on mortality in the UK. Historical data analysis and scientific writing.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="num">06</span><h2>Skills &amp; contact</h2></div>
+    <div class="meta-grid">
+      <div class="skills">
+        <span class="label">Skills</span>
+        <p>Risk and hazard analysis. Quantitative data analysis. Scientific and long-form writing. Photography and photo editing (Lightroom, Photoshop). Front-end and small-tool building (JavaScript, serverless functions, web mapping). Bilingual English and Spanish.</p>
+        <span class="label" style="margin-top:8px">Languages</span>
+        <p>English (native). Spanish (fluent).</p>
+      </div>
+      <div class="contact">
+        <span class="label">Contact</span>
+        <div class="email"><a href="mailto:thomas.bedwin@gmail.com">thomas.bedwin@gmail.com</a></div>
+        <span class="label">Elsewhere</span>
+        <div class="links">
+          <a href="https://forum.effectivealtruism.org/users/tbedwin">EA Forum &#8599;</a>
+          <a href="https://www.linkedin.com/in/thomas-bedwin">LinkedIn &#8599;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="eyebrow">Thomas Bedwin · Madrid · updated 2026</div>
+  </footer>
+
+</div>
+
+<script>
+  (function(){
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var els=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+    },{threshold:.12});
+    els.forEach(function(e){io.observe(e)});
+  })();
+</script>
+</body>
+</html>
