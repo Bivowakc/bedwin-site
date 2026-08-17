@@ -199,6 +199,36 @@
     </div>
   </div>
 
+  <div class="wrap">
+    <div class="panel">
+      <h2>How this model evolved</h2>
+      <p>This explorer was built in three passes. The useful thing about seeing them together is that the changes were about becoming more honest, not more elaborate: each version stripped out a piece of false confidence the one before it was smuggling in.</p>
+      <table class="table">
+        <thead>
+          <tr><th>Version</th><th>What it did</th><th>What changed, and why</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">V1</td>
+            <td>One canonical number per scenario (regional, intermediate, large), including a headline mortality figure.</td>
+            <td>Clear at showing the size gap between scenarios, but it overstated its own precision and bundled physical and food-system uncertainty into a single dashboard.</td>
+          </tr>
+          <tr>
+            <td class="mono">V2</td>
+            <td>Added the Track A / Track B lofting fork and explicit confidence tiers (physical, food-system, recovery).</td>
+            <td>Began separating physical uncertainty from food-system uncertainty. But it still looked more precise than it was, especially once recovery and mortality sat beneath directly modelled anchor cases.</td>
+          </tr>
+          <tr>
+            <td class="mono">v3</td>
+            <td>Removed the recovery and mortality tier, turned the biggest hidden uncertainties into sliders you can move, and added the assumption audit above.</td>
+            <td>The mortality estimates were the least defensible and the most likely to overclaim, so they went. Exposing uncertainty as parameters makes the model look less authoritative, which is exactly why it is more honest.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="small note warn" style="margin-top:14px">The through-line: three passes, each one removing a bit of false confidence rather than piling on features.</p>
+    </div>
+  </div>
+
   <script>
     const presets = {
       regional: { bc: 5, loft: 0.8, life: 5.0, nh: 0.8, food: 1.0 },
