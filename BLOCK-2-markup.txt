@@ -1,0 +1,9 @@
+BLOCK 2 of 3  —  MARKUP (one line)
+WHERE IT GOES: in index.html, paste on the line immediately AFTER
+  <header>
+and immediately BEFORE
+  <div class="eyebrow">Curriculum vitae</div>
+Copy the one line below the dashed line.
+------------------------------------------------------------------
+
+    <div class="tbc-stage" id="tbc-stage"></div>

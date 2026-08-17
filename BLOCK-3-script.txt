@@ -1,0 +1,248 @@
+BLOCK 3 of 3  —  SCRIPT
+WHERE IT GOES: in index.html, paste immediately BEFORE the closing
+</body> tag, after your existing <script> block.
+Copy everything below the dashed line, including the <script> tags.
+------------------------------------------------------------------
+
+<script> block.
+     ============================================================ -->
+
+<script>
+/* ============================================================
+   TOSSED BADGE  —  vanilla JS, no dependencies.
+   A card thrown onto the page: airborne arc, landing, skid.
+   Height (z) drives the shadow, which chases the card down and
+   tightens under it at contact. It always settles the right way up.
+   ============================================================ */
+(function () {
+
+  const C = {
+    name:   'Thomas Bedwin',
+    role:   'Co-founder | Photojournalist',
+    aim:    'Pivot: AI Governance Comms.',
+    org:    'Delegate',
+    issuer: 'TJB',
+    photo:  'portrait.jpeg',
+    idNumber: 'TJB-0417',
+    year:   '2026',
+    stamp:  ['VALID','ACCESS'],
+
+    cardWidth: 236,
+    cardRatio: 1.44,
+    restAngle: -7,
+
+    launchZ:      420,
+    launchSpin:   200,
+    gravity:      1.55,
+    bounce:       0.26,
+    friction:     0.925,
+    spinFriction: 0.90,
+    settle:       0.075,
+
+    lightX: -0.30,
+    lightY:  0.42,
+    shadowMax: 0.26
+  };
+
+  const stage = document.getElementById('tbc-stage');
+  if (!stage) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- DOM ---------- */
+  const shadow = document.createElement('div');
+  shadow.className = 'tbc-shadow';
+
+  const card = document.createElement('div');
+  card.className = 'tbc-card';
+  card.tabIndex = 0;
+  card.setAttribute('aria-label', C.name + '. ' + C.role + '. ' + C.aim);
+  card.innerHTML = '' +
+    '<svg class="tbc-guilloche" viewBox="0 0 200 280" preserveAspectRatio="none" aria-hidden="true">' +
+      Array.from({length:16},(_,i)=>'<ellipse cx="100" cy="140" rx="'+(18+i*7)+'" ry="'+(8+i*9)+'" fill="none" stroke="var(--accent)" stroke-width=".6" transform="rotate('+(i*11)+' 100 140)"/>').join('') +
+    '</svg>' +
+    '<div class="tbc-pass">' +
+      '<div class="tbc-slot"></div>' +
+      '<div class="tbc-head"><span>'+C.org+'</span><span>'+C.issuer+'</span></div>' +
+      '<div class="tbc-portrait"><span class="tbc-ph">PHOTO</span>' +
+        '<img src="'+C.photo+'" alt="" onerror="this.remove()">' +
+      '</div>' +
+      '<p class="tbc-name">'+C.name+'</p>' +
+      '<p class="tbc-role">'+C.role+'</p>' +
+      (C.aim ? '<p class="tbc-aim">'+C.aim+'</p>' : '') +
+      '<div class="tbc-foot"><span>'+C.idNumber+'</span><span>'+C.year+'</span></div>' +
+      '<div class="tbc-stamp">'+C.stamp.join('<br>')+'</div>' +
+    '</div>';
+
+  const hint = document.createElement('p');
+  hint.className = 'tbc-hint';
+  hint.textContent = 'Flick the pass';
+
+  stage.append(shadow, card, hint);
+
+  /* ---------- state ---------- */
+  let sw, sh, cw, ch, restX, restY;
+  const s = { x:0, y:0, z:0, vx:0, vy:0, vz:0, a:0, va:0, landed:false };
+
+  function measure(){
+    sw = stage.clientWidth; sh = stage.clientHeight;
+    cw = Math.min(C.cardWidth, sw * 0.68);
+    ch = cw * C.cardRatio;
+    if (ch > sh - 30){ ch = sh - 30; cw = ch / C.cardRatio; }
+    card.style.width = shadow.style.width = cw + 'px';
+    card.style.height = shadow.style.height = ch + 'px';
+    restX = sw * 0.50;
+    restY = sh * 0.50;
+  }
+
+  /* the nearest orientation that still reads as the right way up */
+  const upright = a => C.restAngle + 360 * Math.round((a - C.restAngle) / 360);
+
+  function estimateFlight(z0, vz0){
+    let z = z0, vz = vz0, n = 0;
+    while (z > 0 && n < 500){ vz -= C.gravity; z += vz; n++; }
+    return Math.max(n, 12);
+  }
+
+  function toss(){
+    s.z = C.launchZ; s.vz = 6; s.landed = false;
+    s.x = restX - sw * 0.75;              /* in from the left of the column */
+    s.y = restY + sh * 0.85;              /* and from below */
+    s.a = C.restAngle - C.launchSpin;
+
+    const flight = estimateFlight(s.z, s.vz);
+    s.vx = ((restX + sw * 0.05) - s.x) / flight;
+    s.vy = ((restY + sh * 0.05) - s.y) / flight;
+    s.va = C.launchSpin / flight;
+
+    if (reduced){
+      s.x = restX; s.y = restY; s.z = 0;
+      s.vx = s.vy = s.vz = s.va = 0; s.a = C.restAngle; s.landed = true;
+    }
+  }
+
+  function step(){
+    if (held) return;
+
+    if (!s.landed){
+      s.vz -= C.gravity; s.z += s.vz;
+      s.x += s.vx; s.y += s.vy; s.a += s.va;
+      if (s.z <= 0){
+        s.z = 0;
+        if (Math.abs(s.vz) > 4){                    /* one small bounce */
+          s.vz = -s.vz * C.bounce;
+          s.vx *= 0.72; s.vy *= 0.72; s.va *= 0.55;
+        } else { s.vz = 0; s.landed = true; }
+      }
+      return;
+    }
+
+    s.x += s.vx; s.y += s.vy;
+    s.vx *= C.friction; s.vy *= C.friction;
+
+    s.a += s.va; s.va *= C.spinFriction;
+    const target = upright(s.a);
+    s.a += (target - s.a) * C.settle;
+
+    if (Math.abs(s.vx) < .02) s.vx = 0;
+    if (Math.abs(s.vy) < .02) s.vy = 0;
+    if (Math.abs(s.va) < .05 && Math.abs(target - s.a) < .2){ s.va = 0; s.a = target; }
+
+    const m = 6;
+    if (s.x < cw/2 + m || s.x > sw - cw/2 - m){ s.vx *= -0.42; s.x = Math.max(cw/2+m, Math.min(sw-cw/2-m, s.x)); }
+    if (s.y < ch/2 + m || s.y > sh - ch/2 - m){ s.vy *= -0.42; s.y = Math.max(ch/2+m, Math.min(sh-ch/2-m, s.y)); }
+  }
+
+  function draw(){
+    const lift = s.z, scale = 1 + lift * 0.00085;
+
+    card.style.transform =
+      'translate(' + (s.x - cw/2) + 'px,' + (s.y - ch/2) + 'px) rotate(' + s.a + 'deg) scale(' + scale + ')';
+    card.style.boxShadow =
+      '0 ' + (2 + lift*0.02) + 'px ' + (6 + lift*0.05) + 'px rgba(22,32,42,' + (0.08 + lift*0.00016) + ')';
+
+    const sx = s.x + lift * C.lightX, sy = s.y + lift * C.lightY;
+    shadow.style.transform =
+      'translate(' + (sx - cw/2) + 'px,' + (sy - ch/2) + 'px) rotate(' + s.a + 'deg) scale(' + (1 + lift*0.0016) + ')';
+    shadow.style.filter  = 'blur(' + (6 + lift * 0.085) + 'px)';
+    shadow.style.opacity = Math.max(0.04, C.shadowMax - lift * 0.00055);
+  }
+
+  let acc = 0, last = performance.now(), running = true;
+  function loop(now){
+    acc += Math.min(now - last, 80); last = now;
+    while (acc >= 16.67){ step(); acc -= 16.67; }
+    draw();
+    if (running) requestAnimationFrame(loop);
+  }
+
+  /* ---------- flick it around ---------- */
+  let held = false, grabDX = 0, grabDY = 0, lastT = 0, vHist = [];
+  const local = e => {
+    const r = stage.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  };
+
+  card.addEventListener('pointerdown', e => {
+    const p = local(e);
+    held = true; s.landed = true; s.z = 0; s.vz = 0; s.va = 0;
+    grabDX = s.x - p.x; grabDY = s.y - p.y;
+    lastT = performance.now(); vHist = [];
+    card.classList.add('is-held');
+    card.setPointerCapture(e.pointerId);
+    hint.classList.add('is-gone');
+    e.preventDefault();
+  });
+
+  card.addEventListener('pointermove', e => {
+    if (!held) return;
+    const p = local(e);
+    const nx = p.x + grabDX, ny = p.y + grabDY;
+    const dt = Math.max(performance.now() - lastT, 8);
+    vHist.push({ vx:(nx - s.x)/dt*16.67, vy:(ny - s.y)/dt*16.67 });
+    if (vHist.length > 5) vHist.shift();
+    s.a += (nx - s.x) * 0.045;
+    s.x = nx; s.y = ny; lastT = performance.now();
+  });
+
+  const release = () => {
+    if (!held) return;
+    held = false; card.classList.remove('is-held');
+    const v = vHist.slice(-3);
+    if (v.length){
+      s.vx = v.reduce((a,b)=>a+b.vx,0)/v.length;
+      s.vy = v.reduce((a,b)=>a+b.vy,0)/v.length;
+      s.va = s.vx * 0.14;
+    }
+  };
+  card.addEventListener('pointerup', release);
+  card.addEventListener('pointercancel', release);
+
+  card.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  { s.vx -= 9; s.va -= 3; }
+    if (e.key === 'ArrowRight') { s.vx += 9; s.va += 3; }
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toss(); }
+  });
+
+  /* stop drawing when the hero has scrolled away */
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (en.isIntersecting && !running){ running = true; last = performance.now(); requestAnimationFrame(loop); }
+        else if (!en.isIntersecting) running = false;
+      });
+    }, { threshold: 0 }).observe(stage);
+  }
+
+  measure(); toss(); loop(performance.now());
+
+  let rt;
+  addEventListener('resize', () => {
+    clearTimeout(rt);
+    rt = setTimeout(() => {
+      measure();
+      s.x = restX; s.y = restY; s.z = 0;
+      s.vx = s.vy = s.vz = s.va = 0; s.a = C.restAngle; s.landed = true;
+    }, 180);
+  });
+})();
+</script>
