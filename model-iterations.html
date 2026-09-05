@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What I removed from the model — Thomas Bedwin</title>
+<meta name="description" content="How the Nuclear Winter Explorer changed across three versions, and why the most useful revision was deleting an output.">
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bivowakc.github.io/bedwin-site/model-iterations.html">
+<meta property="og:title" content="What I removed from the model">
+<meta property="og:description" content="How the Nuclear Winter Explorer changed across three versions, and why the most useful revision was deleting an output.">
+<meta property="og:image" content="https://bivowakc.github.io/bedwin-site/og-card.png">
+
+<style>
+:root{
+  --paper:#e8e9e6;
+  --paper-lift:#f1f2ef;
+  --ink:#1c1f21;
+  --ink-soft:#4a5054;
+  --ink-faint:#7d8489;
+  --rule:#c9ccc6;
+  --soot:#8a6a3f;
+  --soot-wash:#8a6a3f14;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:Charter,"Bitstream Charter","Iowan Old Style",Georgia,serif;
+  font-size:19px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{max-width:41rem;margin:0 auto;padding:0 1.5rem}
+
+.hero{padding:5.5rem 0 3.5rem}
+.hero p.kicker{
+  margin:0 0 2.4rem;
+  font-size:.95rem;
+  line-height:1.5;
+  color:var(--ink-faint);
+  max-width:26rem;
+}
+.claim{position:relative;display:inline-block;margin:0 0 1.4rem}
+.claim span{
+  font-size:clamp(2rem,6.2vw,3.1rem);
+  font-weight:600;
+  letter-spacing:-.02em;
+  color:var(--ink-soft);
+  line-height:1.15;
+  display:block;
+}
+.strike{
+  position:absolute;left:-.1em;top:52%;height:3px;width:0;
+  background:var(--soot);
+  animation:cut 900ms cubic-bezier(.7,0,.3,1) 700ms forwards;
+}
+@keyframes cut{to{width:calc(100% + .2em)}}
+@media (prefers-reduced-motion:reduce){
+  .strike{animation:none;width:calc(100% + .2em)}
+}
+.replacement{
+  font-size:clamp(1.35rem,3.4vw,1.75rem);
+  line-height:1.4;
+  margin:0 0 2rem;
+  max-width:33rem;
+}
+.hero .note{margin:0;font-size:1rem;color:var(--ink-soft);max-width:34rem}
+
+h2{
+  font-size:1.02rem;font-weight:600;letter-spacing:.01em;
+  color:var(--ink-soft);margin:0 0 .6rem;
+}
+p{margin:0 0 1.15rem}
+a{color:var(--ink);text-decoration-color:var(--soot);text-underline-offset:.18em}
+a:focus-visible{outline:2px solid var(--soot);outline-offset:3px;border-radius:2px}
+
+.intro{padding:0 0 3.5rem;border-bottom:1px solid var(--rule)}
+
+.versions{padding:1rem 0 0}
+.v{position:relative;padding:3rem 0 2.6rem 3.6rem;border-bottom:1px solid var(--rule)}
+.v:last-of-type{border-bottom:0}
+.v::before{
+  content:attr(data-v);
+  position:absolute;left:0;top:3.15rem;
+  font-size:.82rem;font-weight:600;letter-spacing:.02em;color:var(--ink-faint);
+}
+.v::after{
+  content:"";position:absolute;left:.42rem;top:4.4rem;bottom:0;width:1px;background:var(--rule);
+}
+.v:last-of-type::after{bottom:2.6rem}
+.v h3{margin:0 0 1rem;font-size:1.5rem;font-weight:600;letter-spacing:-.015em;line-height:1.25}
+
+.fault{margin:1.35rem 0 0;padding:1rem 1.15rem;background:var(--soot-wash);border-left:2px solid var(--soot)}
+.fault p{margin:0;font-size:1rem;line-height:1.55;color:var(--ink-soft)}
+.fault p + p{margin-top:.7rem}
+.fault strong{color:var(--soot);font-weight:600}
+
+ul{margin:0 0 1.15rem;padding-left:1.1rem}
+li{margin:0 0 .42rem;padding-left:.2rem}
+li::marker{color:var(--ink-faint)}
+
+.anchors{width:100%;border-collapse:collapse;margin:1.3rem 0 .6rem;font-size:1rem}
+.anchors th{
+  text-align:left;font-weight:600;color:var(--ink-faint);font-size:.9rem;
+  padding:0 1rem .5rem 0;border-bottom:1px solid var(--rule);
+}
+.anchors td{padding:.62rem 1rem .62rem 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.anchors tr:last-child td{border-bottom:0}
+.anchors td:first-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.caption{font-size:.92rem;color:var(--ink-faint);margin:0 0 1.15rem}
+
+.close{padding:3.2rem 0 2rem;border-top:1px solid var(--rule);margin-top:1rem}
+.actions{display:flex;flex-wrap:wrap;gap:.7rem;margin:1.8rem 0 0}
+.btn{
+  display:inline-block;padding:.72rem 1.15rem;
+  background:var(--ink);color:var(--paper-lift);
+  text-decoration:none;font-size:1rem;border-radius:2px;
+}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+.btn:focus-visible{outline:2px solid var(--soot);outline-offset:2px}
+
+footer{padding:2.5rem 0 4rem;color:var(--ink-faint);font-size:.92rem}
+footer p{margin:0 0 .4rem}
+
+@media (max-width:34rem){
+  body{font-size:18px}
+  .hero{padding:3.5rem 0 2.5rem}
+  .v{padding-left:2.9rem}
+}
+</style>
+</head>
+<body>
+
+<main class="wrap">
+
+  <section class="hero">
+    <p class="kicker">Nuclear Winter Explorer, versions one to three</p>
+
+    <div class="claim">
+      <span>5+ billion deaths</span>
+      <i class="strike" aria-hidden="true"></i>
+    </div>
+
+    <p class="replacement">The current version of this model does not tell you how many people die. Removing that was the most useful change I made.</p>
+
+    <p class="note">The figure was real and correctly cited. That turned out not to be enough.</p>
+  </section>
+
+  <section class="intro">
+    <h2>Why this page exists</h2>
+    <p>Most published models show you the finished thing. You get the outputs, the sliders, a tidy interface, and no way of knowing which parts the author trusts and which parts are holding on by their fingernails.</p>
+    <p>This page shows the working. What each version claimed, what was wrong with it, and what I did about it. The direction of travel is toward saying less with more confidence rather than more with less.</p>
+    <p>The model is a reduced-form treatment of two linked things: how much the surface cools after a large injection of soot into the stratosphere, and how much stress that puts on food production. Plain HTML, SVG and JavaScript, no dependencies, deliberately simple. It is a tool for reasoning about the shape of the problem, not a substitute for the climate models it borrows its anchors from.</p>
+  </section>
+
+  <section class="versions">
+
+    <article class="v" data-v="V1">
+      <h3>A number that did not belong to the model</h3>
+      <p>The first version presented each scenario as a complete picture. Choose a scale of exchange, and the interface returned a cooling curve, a precipitation change, a calorie decline, and a death toll.</p>
+      <p>The death toll was not invented. It came from Xia et al. 2022 in <em>Nature Food</em>, it was cited on screen, and I had read the paper. On its own terms the number was defensible.</p>
+      <p>The problem was where I had put it. My model computed the cooling curve from soot mass, aerosol lifetime and the other physical parameters. It did not compute mortality, and could not, because nothing in it represented food distribution, trade behaviour, stockpiles or political response. The figure was a fixed value attached to each scenario, sitting in a row of numbers that did respond to the controls.</p>
+      <p>So a reader moving the sliders would watch the curve change and reasonably assume the death toll was downstream of it. It was not. It never moved, because it was not an output at all. It was someone else's conclusion, conditioned on their assumptions rather than mine, displayed with the authority of my interface.</p>
+      <div class="fault">
+        <p><strong>The fault:</strong> an interface makes an implicit claim about what it computes. Placing a static citation among live outputs asserts a causal link that does not exist.</p>
+        <p>The failure was not accuracy. It was provenance. The number was true and it was not mine.</p>
+      </div>
+    </article>
+
+    <article class="v" data-v="V2">
+      <h3>Treating it as a confidence problem</h3>
+      <p>Version two improved the physics and the presentation, and misdiagnosed the central issue.</p>
+      <ul>
+        <li>Added an explicit fork in the lofting pathway. How much soot reaches the stratosphere and how long it stays there is genuinely contested, and the two plausible tracks give materially different answers. Collapsing them into one line had been hiding a real disagreement in the literature.</li>
+        <li>Introduced confidence tiers, so each output carried a visible marker of how much weight it could bear.</li>
+        <li>Began separating physical uncertainty from food-system uncertainty, which are different in kind and had been blurred together.</li>
+      </ul>
+      <p>The first two changes were straightforwardly good, and the lofting fork remains in the model today. But the mortality figure survived, now wearing a low-confidence label.</p>
+      <p>That label made things slightly worse. Grading a number as uncertain still asserts that it is your estimate, arrived at by your method, and that you have judged how far to trust it. None of that was true here. I had diagnosed a provenance problem as a confidence problem, and the fix I applied was answering a question nobody had asked.</p>
+      <div class="fault">
+        <p><strong>The fault:</strong> a caveat beside a large number does not undo the number. Readers keep the figure and discard the qualifier, and I had given myself permission to keep displaying it.</p>
+      </div>
+    </article>
+
+    <article class="v current" data-v="v3">
+      <h3>Deleting the weakest link</h3>
+      <p>The current version removes the recovery and mortality tier entirely.</p>
+      <p>This was harder than it sounds, because that tier was the part people reacted to. It is what makes the subject feel like it matters. Cutting it makes the tool less arresting and, I think, more trustworthy, and if those two things are in tension then the second one wins.</p>
+      <p>What went in its place:</p>
+      <ul>
+        <li>The five quantities that actually drive the result became sliders rather than buried constants: soot mass in teragrams, lofting efficiency, aerosol lifetime, northern hemisphere targeting bias, and food-system sensitivity. If a parameter changes the answer, the reader should be able to see it and push on it.</li>
+        <li>An assumption audit lists what the model takes for granted and grades each one, so the scaffolding is visible rather than inferred.</li>
+        <li>Outputs are framed as conditional pathways rather than forecasts. The model answers "if these five things hold, this follows", which is a question it can actually answer.</li>
+      </ul>
+      <p>The physical tier still leans on published work, and this is the distinction that took me three passes to get right. Those papers supply <em>parameters</em> that my model computes with. The mortality figure was a <em>conclusion</em> that my model computed nothing with. The first is how any reduced-form model has to work. The second was passing off a result as an output.</p>
+      <table class="anchors">
+        <thead>
+          <tr><th>Injection</th><th>Peak cooling</th><th>Source</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Pinatubo, 1991</td><td>0.5 °C observed</td><td>Soden et al. 2002, used as calibration</td></tr>
+          <tr><td>~5 Tg</td><td>~1.8 °C</td><td>Jägermeyr et al. 2020, PNAS</td></tr>
+          <tr><td>~150 Tg</td><td>~8 °C</td><td>Robock et al. 2007; Coupe et al. 2019</td></tr>
+        </tbody>
+      </table>
+      <p class="caption">Pinatubo anchors the low end against an event that was actually measured. Historical volcanic cooling sits near the bottom of this range, which is worth holding onto when reading the rows above it.</p>
+      <div class="fault">
+        <p><strong>What is still uncertain:</strong> the lofting question is unresolved in the literature and this model does not settle it, it just stops hiding it. The food-system tier is a sensitivity parameter, not a crop model. Anyone using this for anything consequential should go to the primary sources it points at.</p>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="close">
+    <h2>What I take from it</h2>
+    <p>Version three tells you less than version one did. It is more useful, because what it does tell you is closer to something it can defend, and because a reader can now see which parts to argue with.</p>
+    <p>The general problem is not specific to nuclear winter. Any tool that displays numbers is making a claim about where those numbers came from, and that claim is made by layout rather than by prose. A citation underneath does not fix a placement that implies otherwise. It is an easy mistake to make in good faith, and it is most tempting where the subject is serious enough that a striking figure feels like a service to the reader.</p>
+
+    <div class="actions">
+      <a class="btn" href="nuclear_winter_v3.html">Open the model</a>
+      <a class="btn ghost" href="index.html">Back to CV</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Thomas Bedwin. Built with no dependencies. Reduced-form model, not a research instrument.</p>
+    <p>Xia et al. 2022, <em>Nature Food</em>. Jägermeyr et al. 2020, <em>PNAS</em>. Robock et al. 2007. Coupe et al. 2019. Soden et al. 2002.</p>
+  </footer>
+
+</main>
+
+</body>
+</html>
